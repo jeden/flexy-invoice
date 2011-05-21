@@ -5,35 +5,41 @@ Created on Apr 26, 2011
 '''
 from test.test_base_appengine_datastore_tester import BaseAppengineDatastoreTester
 from logic.invoice_manager import InvoiceManager
-from model.invoice_models import InvoiceEntity
+from model.invoice_models import InvoiceEntity, InvoiceItemEntity
+from test.test_user import Test_User_Manager
 
 class Test_Invoice_Manager(BaseAppengineDatastoreTester):
     """ Test invoice creation """
         
     invoice_manager = InvoiceManager()
+    test_user = None
+
+    def setUp(self):
+        BaseAppengineDatastoreTester.setUp(self)
+        self.test_user = Test_User_Manager.create_dummy_user()
 
     def test_create_invoice(self):
-        invoice = self.__create_dummy_invoice(1)
-        self.assertIsNotNone(invoice)
-        self.assertIsInstance(invoice, InvoiceEntity)
+        invoice = self.__create_dummy_invoice(self.test_user, 1)
+        self.verify_entity_instance(invoice, InvoiceEntity)
         
         invoice_item = self.__create_dummy_invoice_item(invoice, 1)
-        #self.assertIsNotNone(invoice_item)
-        #self.assertIsInstance(invoice_item, InvoiceItemEntity)
-
+        self.verify_entity_instance(invoice_item, InvoiceItemEntity)
+        self.assertIsNotNone(invoice_item)
+        self.assertIsInstance(invoice_item, InvoiceItemEntity)
         
     ###
     ### PRIVATE METHODS
     ###
     
-    def __create_dummy_invoice(self, index):
+    def __create_dummy_invoice(self, user, index):
         """
             Create a dummy invoice
             
             PARAMETERS:
+            - user creating the invoice
             - index: number to uniquely identify the invoice
         """
-        return InvoiceEntity()
+        return self.invoice_manager.create_invoice(user)
     
     def __create_dummy_invoice_item(self, invoice, index):
         """
@@ -43,4 +49,10 @@ class Test_Invoice_Manager(BaseAppengineDatastoreTester):
         - invoice: the invoice the item has to be added to
         - index: number to uniquely identify the invoice item
         """
-        #self.invoice_manager.add_invoice_item()
+        return self.invoice_manager.add_invoice_item(
+            invoice = invoice,
+            description = 'description %i' % index,
+            quantity = index,
+            price = index * 13.0
+            
+        )

@@ -24,4 +24,8 @@ class Test_User_Manager(BaseAppengineDatastoreTester):
             user = User(email = 'email_%i@gmail.com' % index, _auth_domain = 'gmail.com'),
             account_type = account_type
         )
-        
+    
+    @classmethod
+    def create_dummy_user(cls, index = 1, account_type = UserAccountType.FREE):
+        test = Test_User_Manager()
+        return test.__create_dummy_user(index, account_type)

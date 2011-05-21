@@ -3,9 +3,9 @@ Created on Apr 27, 2011
 
 @author: Antonio Bello - Elapsus
 '''
-from model.invoice_models import CurrencyEntity, ExchangeRateEntity
 from google.appengine.ext import db
 from model.model_utils import DuplicatedEntityException
+from model.domain_models import CurrencyEntity, ExchangeRateEntity
 
 class CurrencyException(Exception):
     pass

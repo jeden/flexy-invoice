@@ -6,7 +6,8 @@ Created on Apr 26, 2011
 from test.test_base_appengine_datastore_tester import BaseAppengineDatastoreTester
 from logic.client_manager import ClientManager
 from model.client_models import ClientEntity, ClientContactEntity
-from model.invoice_models import CurrencyEntity
+from test.test_user import Test_User_Manager
+from model.domain_models import CurrencyEntity
 from test.test_currency import Test_Currency
 
 
@@ -14,6 +15,11 @@ class TestClientManager(BaseAppengineDatastoreTester):
     """ Client manager tests """
     
     client_manager = ClientManager()
+    test_user = None
+    
+    def setUp(self):
+        BaseAppengineDatastoreTester.setUp(self)
+        self.test_user = Test_User_Manager.create_dummy_user()
     
     def test_create_client(self):
         """ Test the creation of a new client """
@@ -38,7 +44,8 @@ class TestClientManager(BaseAppengineDatastoreTester):
             name = 'client_%i' %index,
             address = 'address_%i' % index,
             email = 'corp_email_%i@email.com' % index,
-            default_currency = currency
+            default_currency = currency,
+            user = self.test_user
         )
     
     def __add_dummy_contact(self, client, index):

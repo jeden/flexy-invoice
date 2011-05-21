@@ -4,9 +4,9 @@ Created on Apr 27, 2011
 @author: Antonio Bello - Elapsus
 '''
 from test.test_base_appengine_datastore_tester import BaseAppengineDatastoreTester
-from model.invoice_models import CurrencyEntity
 from datetime import date
 from logic.currency_manager import CurrencyManager, CurrencyException
+from model.domain_models import CurrencyEntity
 
 class Test_Currency(BaseAppengineDatastoreTester):
     """  Currency management tests """
