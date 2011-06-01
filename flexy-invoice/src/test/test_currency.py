@@ -7,30 +7,33 @@ from test.test_base_appengine_datastore_tester import BaseAppengineDatastoreTest
 from datetime import date
 from logic.currency_manager import CurrencyManager, CurrencyException
 from model.domain_models import CurrencyEntity
+from test import helpers
 
 class Test_Currency(BaseAppengineDatastoreTester):
     """  Currency management tests """
     
-    entity_manager = CurrencyManager()
+    def setUp(self):
+        super(Test_Currency, self).setUp()
+        self.entity_manager = CurrencyManager()
     
     def test_create_currency(self):
         """ Test adding a currency """
-        currency = self.__create_dummy_currency(1)
+        currency = helpers.create_dummy_currency(1)
         self.verify_entity_instance(currency, CurrencyEntity)
     
     def test_create_existing_currency(self):
         """ Verify that adding a currency with an already existing symbol generates an exception """
-        currency = self.__create_dummy_currency(1)
+        currency = helpers.create_dummy_currency(1)
         try:
-            currency = self.__create_dummy_currency(1)
+            currency = helpers.create_dummy_currency(1)
             self.fail('Added a duplicated currency symbol')
         except(CurrencyException):
             pass
     
     def test_add_exchange_rate_and_verify_conversion(self):
         """ Add an exchange rate from currency 1 to currency 2 and verify conversion occurs """
-        currency1 = self.__create_dummy_currency(1)
-        currency2 = self.__create_dummy_currency(2)
+        currency1 = helpers.create_dummy_currency(1)
+        currency2 = helpers.create_dummy_currency(2)
         self.entity_manager.add_exchange_rate(from_currency = currency1, to_currency = currency2, date = date.today(), rate = 1.2)
         
         value1 = 10.0
@@ -39,8 +42,8 @@ class Test_Currency(BaseAppengineDatastoreTester):
     
     def test_exchange_rate_on_missing_day(self):
         """ Verify that a conversion using the rate of a day not inserted in the database generates an exception """
-        currency1 = self.__create_dummy_currency(1)
-        currency2 = self.__create_dummy_currency(2)
+        currency1 = helpers.create_dummy_currency(1)
+        currency2 = helpers.create_dummy_currency(2)
         value1 = 10.0
         
         try:
@@ -51,7 +54,7 @@ class Test_Currency(BaseAppengineDatastoreTester):
     
     def test_exchange_rate_for_one_currency(self):
         """ Verify that an exchange rate cannot be created if the from and to currency are the same """
-        currency1 = self.__create_dummy_currency(1)
+        currency1 = helpers.create_dummy_currency(1)
         try:
             self.entity_manager.add_exchange_rate(from_currency = currency1, to_currency = currency1, date = date.today(), rate = 1.2)
             self.fail('Added a conversion rate from and to the same currency')
@@ -60,8 +63,8 @@ class Test_Currency(BaseAppengineDatastoreTester):
 
     def test_duplicated_exchange_rate(self):
         """ Verify that a conversion rate cannot be added twice for the same day """
-        currency1 = self.__create_dummy_currency(1)
-        currency2 = self.__create_dummy_currency(2)
+        currency1 = helpers.create_dummy_currency(1)
+        currency2 = helpers.create_dummy_currency(2)
         self.entity_manager.add_exchange_rate(from_currency = currency1, to_currency = currency2, date = date.today(), rate = 1.2)
 
         try:
@@ -73,7 +76,7 @@ class Test_Currency(BaseAppengineDatastoreTester):
     def test_convert_as_list(self):
         """ Retrieve all currencies and convert to format usable in a dropdown as  a tuple of pairs (id, name) """
         for index in range (0, 5):
-            self.__create_dummy_currency(index)
+            helpers.create_dummy_currency(index)
         
         currencies = self.entity_manager.get_currencies_list()
         
@@ -83,17 +86,5 @@ class Test_Currency(BaseAppengineDatastoreTester):
         for currency in currencies:
             self.assertIsNotNone(currency)
             self.assertEqual(len(currency), 2)
-        
-    
-    def __create_dummy_currency(self, index):
-        return self.entity_manager.create_currency(
-            name = 'US%i Dollar' % index,
-            code = 'USD%i' % index,
-            symbol = '$%i'  % index
-        )
-        
-    @classmethod
-    def create_dummy_currency(cls, index):
-        return Test_Currency().__create_dummy_currency(1)
         
         
