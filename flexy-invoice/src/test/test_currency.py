@@ -70,9 +70,25 @@ class Test_Currency(BaseAppengineDatastoreTester):
         except(CurrencyException):
             pass
     
+    def test_convert_as_list(self):
+        """ Retrieve all currencies and convert to format usable in a dropdown as  a tuple of pairs (id, name) """
+        for index in range (0, 5):
+            self.__create_dummy_currency(index)
+        
+        currencies = self.entity_manager.get_currencies_list()
+        
+        self.assertIsNotNone(currencies)
+        self.assertEqual(len(currencies), 5)
+        
+        for currency in currencies:
+            self.assertIsNotNone(currency)
+            self.assertEqual(len(currency), 2)
+        
+    
     def __create_dummy_currency(self, index):
         return self.entity_manager.create_currency(
             name = 'US%i Dollar' % index,
+            code = 'USD%i' % index,
             symbol = '$%i'  % index
         )
         

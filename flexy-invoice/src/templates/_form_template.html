@@ -1,0 +1,6 @@
+{% for field in form %}
+	{% include '_form__row_template.html' %}
+	{{ field.label_tag}}
+	{{ field }}
+	<div class="error-container">{{ field.errors }}</div>
+{% endfor %}

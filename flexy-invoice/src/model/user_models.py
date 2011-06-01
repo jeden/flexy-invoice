@@ -20,7 +20,4 @@ class UserEntity(db.Model):
     @classmethod
     def create(cls, user, account_type):
         # check_for_uniqueness(User, 'user', user)
-        return cls(
-                   user = user, 
-                   account_type = account_type,
-        )
+        return cls(user = user, account_type = account_type)

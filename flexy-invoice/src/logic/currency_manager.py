@@ -11,10 +11,10 @@ class CurrencyException(Exception):
     pass
 
 class CurrencyManager:
-    def create_currency(self, name, symbol):
+    def create_currency(self, name, code, symbol):
         """ Create a new currency """
         try:
-            currency = CurrencyEntity.create(name = name, symbol = symbol)
+            currency = CurrencyEntity.create(name = name, code = code, symbol = symbol)
             currency.put()
         except(DuplicatedEntityException):
             raise CurrencyException
@@ -41,6 +41,17 @@ class CurrencyManager:
             raise CurrencyException
     
         return exchange_rate.rate * amount
+
+    @classmethod
+    def get_currencies_list(cls):
+        """
+            Return the list of currencies as a list of pairs::
+            ((1, "$ United State Dollar"), ...)
+        """
+        currencies = CurrencyEntity.all().order('name').run()
+        tuple = [(c.key().id(), "%s %s" % (c.name, c.symbol)) for c in currencies]
+        
+        return tuple
 
     def __get_exchange_rate(self, from_currency, to_currency, date):
         """ Find the exchange rate for the specified pair of currencies and date """

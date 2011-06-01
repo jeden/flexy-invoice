@@ -43,5 +43,6 @@ class BaseAppengineDatastoreTester(unittest.TestCase):
         """ verify that instance is not null, of the specified type, and having a not null key """
         self.assertIsNotNone(instance)
         self.assertIsInstance(instance, type)
-        self.assertIsInstance(instance.key(), db.Key)
+        if not isinstance(instance, db.Key):
+            self.assertIsInstance(instance.key(), db.Key)
             

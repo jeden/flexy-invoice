@@ -1,0 +1,18 @@
+{% extends '_main_template.html' %}
+
+{% block title %}Add Client{% endblock %}
+
+{% block content %}
+
+<form method='post'>
+	<fieldset>
+		<legend>Create New Client</legend>
+		
+		{% include '_form_template.html' %}
+		
+		<input type='submit' value='Create'  />
+	</fieldset>
+	
+</form>
+
+{% endblock %}

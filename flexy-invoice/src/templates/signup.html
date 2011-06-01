@@ -1,0 +1,19 @@
+{% extends '_main_template.html' %}
+
+{% block title %}Sign up{% endblock %}
+
+{% block content %}
+
+{% if not is_logged_in %} 
+	
+	<a href="{{ login_url }}">Login into your Google account</a>
+	
+{% else %}
+
+	<form method="post">
+		<input type='submit' value='Register' />  
+	</form>
+
+{% endif %}
+
+{% endblock %}

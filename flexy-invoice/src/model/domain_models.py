@@ -10,12 +10,13 @@ class CurrencyEntity(db.Model):
     """ Currency entity """
     
     name = db.StringProperty(required = True)
+    code = db.StringProperty(required = True)
     symbol = db.StringProperty(required = True)
     
     @classmethod
-    def create(cls, name, symbol):
-        check_for_uniqueness(CurrencyEntity, 'symbol', symbol)
-        return cls(name = name, symbol = symbol)
+    def create(cls, name, code, symbol):
+        check_for_uniqueness(CurrencyEntity, 'code', code)
+        return cls(name = name, symbol = symbol, code = code)
     
 class ExchangeRateEntity(db.Model):
     """ Exchange rate between two currencies """

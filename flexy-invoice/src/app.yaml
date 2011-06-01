@@ -1,8 +1,30 @@
 application: flexy-invoice
-version: 1
+version: 0-0-1
 runtime: python
 api_version: 1
 
 handlers:
+- url: /static
+  static_dir: static
+
+- url: /p/.*
+  script: main_authenticated.py
+  login: required
+  
 - url: /.*
-  script: helloworld.py
+  script: main_public.py
+
+skip_files:
+- ^(.*/)?app\.yaml
+- ^(.*/)?app\.yml
+- ^(.*/)?index\.yaml
+- ^(.*/)?index\.yml
+- ^(.*/)?#.*#
+- ^(.*/)?.*~
+- ^(.*/)?.*\.py[co]
+- ^(.*/)?.*/RCS/.*
+- ^(.*/)?\..*
+- ^(.*/)?.*/_svn/.*
+
+builtins:
+- remote_api: on

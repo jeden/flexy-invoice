@@ -24,8 +24,6 @@ class Test_Invoice_Manager(BaseAppengineDatastoreTester):
         
         invoice_item = self.__create_dummy_invoice_item(invoice, 1)
         self.verify_entity_instance(invoice_item, InvoiceItemEntity)
-        self.assertIsNotNone(invoice_item)
-        self.assertIsInstance(invoice_item, InvoiceItemEntity)
         
     ###
     ### PRIVATE METHODS
@@ -41,18 +39,32 @@ class Test_Invoice_Manager(BaseAppengineDatastoreTester):
         """
         return self.invoice_manager.create_invoice(user)
     
-    def __create_dummy_invoice_item(self, invoice, index):
+    def __create_dummy_invoice_item(self, invoice, index, count = 1):
         """
         Create a dummy invoice item
         
         PARAMETERS:
         - invoice: the invoice the item has to be added to
         - index: number to uniquely identify the invoice item
+        - the number of invoice items to add
         """
-        return self.invoice_manager.add_invoice_item(
-            invoice = invoice,
-            description = 'description %i' % index,
-            quantity = index,
-            price = index * 13.0
-            
-        )
+        
+        if count == 1:
+            ret = self.invoice_manager.add_invoice_item(
+                invoice = invoice,
+                description = 'description %i' % index,
+                quantity = index,
+                price = index * 13.0
+            )
+        else:
+            ret = ()
+            for i in range (0, count):
+                ret.append(
+                    self.invoice_manager.add_invoice_item(
+                        invoice = invoice,
+                        description = 'description %i' % i,
+                        quantity = i,
+                        price = i * 13.0
+                    )
+                )
+        return ret

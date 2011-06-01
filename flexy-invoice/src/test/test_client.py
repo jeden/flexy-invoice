@@ -44,8 +44,8 @@ class TestClientManager(BaseAppengineDatastoreTester):
             name = 'client_%i' %index,
             address = 'address_%i' % index,
             email = 'corp_email_%i@email.com' % index,
-            default_currency = currency,
-            user = self.test_user
+            default_currency_id = currency.key().id(),
+            account = self.test_user.user
         )
     
     def __add_dummy_contact(self, client, index):
