@@ -9,6 +9,7 @@ from logic.client_manager import ClientManager
 from logic.currency_manager import CurrencyManager
 from logic.user_manager import UserManager
 from google.appengine.api import users
+from logic.language_manager import LanguageManager
 
 def create_dummy_invoice(user, index, invoice_manager = None):
     """
@@ -65,12 +66,14 @@ def create_dummy_client(index, user, client_manager = None):
         client_manager = ClientManager()
     
     currency = create_dummy_currency(index)
+    language = create_dummy_language(index)
     
     return client_manager.add_client(
         name = 'client_%i' %index,
         address = 'address_%i' % index,
         email = 'corp_email_%i@email.com' % index,
         default_currency_id = currency.key().id(),
+        default_language_id = language.key().id(),
         account = user.user
     )
 
@@ -104,3 +107,6 @@ def create_dummy_user(index, account_type = UserAccountType.FREE, user_manager =
         google_account = users.User('email_%i@gmail.com' % index),
         account_type = account_type
     )
+
+def create_dummy_language(index):
+    return LanguageManager.create_language(name = 'language_%i' % index)

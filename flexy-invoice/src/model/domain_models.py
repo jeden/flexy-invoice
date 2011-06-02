@@ -30,3 +30,13 @@ class ExchangeRateEntity(db.Model):
         """ Create a new exchange rate instance """
         return cls(from_currency = from_currency, to_currency = to_currency, date = date, rate = rate)
     
+class LanguageEntity(db.Model):
+    """ Language entity """
+    
+    name = db.StringProperty(required = True)
+    
+    @classmethod
+    def create(cls, name):
+        check_for_uniqueness(LanguageEntity, 'name', name)
+        return cls(name = name)
+    

@@ -6,7 +6,7 @@ Created on Apr 26, 2011
 from test.test_base_appengine_datastore_tester import BaseAppengineDatastoreTester
 from logic.client_manager import ClientManager
 from model.client_models import ClientEntity, ClientContactEntity
-from model.domain_models import CurrencyEntity
+from model.domain_models import CurrencyEntity, LanguageEntity
 from test import helpers
 
 
@@ -23,6 +23,7 @@ class TestClientManager(BaseAppengineDatastoreTester):
         client = helpers.create_dummy_client(1, self.test_user)
         self.verify_entity_instance(client, ClientEntity)
         self.verify_entity_instance(client.default_currency, CurrencyEntity)
+        self.verify_entity_instance(client.default_language, LanguageEntity)
         
     def test_add_client_contact(self):
         client = helpers.create_dummy_client(1, self.test_user)

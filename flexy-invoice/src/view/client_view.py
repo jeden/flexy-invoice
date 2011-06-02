@@ -10,6 +10,7 @@ from logic.currency_manager import CurrencyManager
 from logic.client_manager import ClientManager
 from google.appengine.api import users
 from util.base_handler import BaseProtectedHandler
+from logic.language_manager import LanguageManager
 
 class ClientForm(djangoforms.ModelForm):
     """ Form for creating and editing a client """
@@ -17,13 +18,21 @@ class ClientForm(djangoforms.ModelForm):
     address = forms.CharField(label = 'Address', widget = forms.Textarea(attrs={'cols': 30, 'rows': 5}))
     email = forms.EmailField(label = 'Email')
     default_currency = forms.ChoiceField(label = 'Default Currency')
+    default_language = forms.ChoiceField(label = "Default Language")
     
     def __init__(self, *args, **kwargs):
         super(ClientForm, self).__init__(*args, **kwargs)
-        
-        currencies = CurrencyManager.get_currencies_list()
+
+        # Initialize the currencies drop down        
+        currencies = CurrencyManager.list_currencies()
         currencies.insert(0, ('', '--Select--'))
         self.fields['default_currency'].choices = currencies
+        
+        # Initialize the languages drop down
+        languages = LanguageManager.list_languages()
+        languages.insert(0, ('', '--Select--'))
+        self.fields['default_language'].choices = languages
+        
         self.prefix = 'client'
         self.auto_id = '%s'
         
@@ -43,7 +52,8 @@ class AddClientHandler(BaseProtectedHandler):
             address = form['address'].data
             email = form['email'].data
             default_currency_id = form['default_currency'].data
+            default_language_id = form['default_language'].data
 
-            ClientManager.add_client(user, name, address, email, default_currency_id)
+            ClientManager.add_client(user, name, address, email, default_currency_id, default_language_id)
         else:
             self.get(form)

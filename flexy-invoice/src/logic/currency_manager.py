@@ -43,7 +43,7 @@ class CurrencyManager:
         return exchange_rate.rate * amount
 
     @classmethod
-    def get_currencies_list(cls):
+    def list_currencies(cls):
         """
             Return the list of currencies as a list of pairs::
             ((1, "$ United State Dollar"), ...)

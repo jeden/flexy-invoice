@@ -78,7 +78,7 @@ class Test_Currency(BaseAppengineDatastoreTester):
         for index in range (0, 5):
             helpers.create_dummy_currency(index)
         
-        currencies = self.entity_manager.get_currencies_list()
+        currencies = self.entity_manager.list_currencies()
         
         self.assertIsNotNone(currencies)
         self.assertEqual(len(currencies), 5)

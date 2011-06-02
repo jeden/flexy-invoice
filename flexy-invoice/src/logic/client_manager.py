@@ -9,11 +9,12 @@ from google.appengine.ext import db
 
 class ClientManager:
     @classmethod
-    def add_client(self, account, name, address, email, default_currency_id):
+    def add_client(self, account, name, address, email, default_currency_id, default_language_id):
         """ Create a new client """
         user = UserManager.retrieve_user_by_account(account)
-        currency_key = db.Key.from_path('CurrencyEntity', default_currency_id)
-        client = ClientEntity.create(user = user, name = name, address = address, email = email, default_currency = currency_key)
+        currency_key = db.Key.from_path('CurrencyEntity', int(default_currency_id))
+        language_key = db.Key.from_path('LanguageEntity', int(default_language_id))
+        client = ClientEntity.create(user = user, name = name, address = address, email = email, default_currency = currency_key, default_language = language_key)
         client.put()
         return client
     

@@ -5,7 +5,7 @@ Created on Apr 26, 2011
 '''
 from google.appengine.ext import db
 from model.user_models import UserEntity
-from model.domain_models import CurrencyEntity
+from model.domain_models import CurrencyEntity, LanguageEntity
 
 class ClientEntity(db.Model):
     """
@@ -16,10 +16,11 @@ class ClientEntity(db.Model):
     address = db.PostalAddressProperty(required = True)
     email = db.EmailProperty(required = True)
     default_currency = db.ReferenceProperty(reference_class = CurrencyEntity)
+    default_language = db.ReferenceProperty(reference_class = LanguageEntity)
     
     @classmethod
-    def create(cls, user, name, address, email, default_currency):
-        return cls(user = user, name = name, address = address, email = email, default_currency = default_currency)
+    def create(cls, user, name, address, email, default_currency, default_language):
+        return cls(user = user, name = name, address = address, email = email, default_currency = default_currency, default_language = default_language)
         
 class ClientContactEntity(db.Model):
     """
