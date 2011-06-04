@@ -21,6 +21,7 @@ import wsgiref
 from google.appengine.ext import webapp
 from view.client_view import AddClientHandler
 from util import render_template
+from view.invoice_view import CreateInvoiceHandler
 
 class MainHandler(webapp.RequestHandler):
     def get(self):
@@ -29,7 +30,8 @@ class MainHandler(webapp.RequestHandler):
 
 def main():
     application = webapp.WSGIApplication([
-                                          ('/p/client/add', AddClientHandler)],
+                                         ('/p/client/add', AddClientHandler),
+                                         ('/p/invoice/create', CreateInvoiceHandler)],
                                          debug = True)
     wsgiref.handlers.CGIHandler().run(application)
 

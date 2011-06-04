@@ -25,12 +25,12 @@ class ClientForm(djangoforms.ModelForm):
 
         # Initialize the currencies drop down        
         currencies = CurrencyManager.list_currencies()
-        currencies.insert(0, ('', '--Select--'))
+        currencies.insert(0, ('', ''))
         self.fields['default_currency'].choices = currencies
         
         # Initialize the languages drop down
         languages = LanguageManager.list_languages()
-        languages.insert(0, ('', '--Select--'))
+        languages.insert(0, ('', ''))
         self.fields['default_language'].choices = languages
         
         self.prefix = 'client'

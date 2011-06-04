@@ -21,6 +21,9 @@ class ClientEntity(db.Model):
     @classmethod
     def create(cls, user, name, address, email, default_currency, default_language):
         return cls(user = user, name = name, address = address, email = email, default_currency = default_currency, default_language = default_language)
+    
+    def __repr__(self):
+        return self.name
         
 class ClientContactEntity(db.Model):
     """

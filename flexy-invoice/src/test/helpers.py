@@ -11,6 +11,7 @@ from logic.user_manager import UserManager
 from google.appengine.api import users
 from logic.language_manager import LanguageManager
 
+'''
 def create_dummy_invoice(user, index, invoice_manager = None):
     """
         Create a dummy invoice
@@ -58,15 +59,18 @@ def create_dummy_invoice_item(invoice, index, count = 1, invoice_manager = None)
                 )
             )
     return ret
-
-def create_dummy_client(index, user, client_manager = None):
+'''
+def create_dummy_client(index, user, client_manager = None, language = None, currency = None):
     """ Create a dummy client """
     
     if client_manager == None:
-        client_manager = ClientManager()
+        client_manager = ClientManager(user.user)
     
-    currency = create_dummy_currency(index)
-    language = create_dummy_language(index)
+    if currency is None:
+        currency = create_dummy_currency(index)
+        
+    if language is None:
+        language = create_dummy_language(index)
     
     return client_manager.add_client(
         name = 'client_%i' %index,
@@ -74,14 +78,13 @@ def create_dummy_client(index, user, client_manager = None):
         email = 'corp_email_%i@email.com' % index,
         default_currency_id = currency.key().id(),
         default_language_id = language.key().id(),
-        account = user.user
     )
 
-def add_dummy_contact(client, index, client_manager = None):
+def add_dummy_contact(index, client, user, client_manager = None):
     """ add a dummy client contact """
 
     if client_manager == None:
-        client_manager = ClientManager()
+        client_manager = ClientManager(user.user)
 
     return client_manager.add_client_contact(
         client = client, 

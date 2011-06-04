@@ -53,6 +53,13 @@ class CurrencyManager:
         
         return tuple
 
+    @classmethod
+    def find_by_id(cls, currency_id):
+        return CurrencyEntity.get_by_id(currency_id) 
+
+    #
+    # PRIVATE METHODS
+    #
     def __get_exchange_rate(self, from_currency, to_currency, date):
         """ Find the exchange rate for the specified pair of currencies and date """
         query = db.Query(ExchangeRateEntity)
@@ -60,4 +67,3 @@ class CurrencyManager:
         query.filter('to_currency = ', to_currency)
         query.filter('date = ', date)
         return query.get()
-        

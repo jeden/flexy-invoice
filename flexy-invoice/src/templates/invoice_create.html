@@ -1,0 +1,69 @@
+{% extends '_main_template.html' %}
+
+{% block title %}Create Invoice{% endblock %}
+
+{% block head %}
+<script type='text/javascript' src='/static/js/invoice.js'></script>
+{% endblock %}
+
+{% block content %}
+
+<script>
+$(document).ready(function() {
+	$('#invoice-invoice_date, #invoice-sale_date').datepicker({dateFormat: 'yy-mm-dd'});
+});
+</script>
+
+<form method='post'>
+	{{ invoice_form.errors }}
+	
+	<fieldset>
+		{{ invoice_form.items }}
+		
+		<legend>Create New Invoice</legend>
+		
+		{{ invoice_form.client.label_tag}}
+		{{ invoice_form.client }}
+		<br/>
+		{{ invoice_form.currency.label_tag}}
+		{{ invoice_form.currency}}
+		<br/>				
+
+		{{ invoice_form.invoice_no.label_tag}}
+		{{ invoice_form.invoice_no}}
+		<br/>				
+		{{ invoice_form.invoice_date.label_tag}}
+		{{ invoice_form.invoice_date}}
+		<br/>				
+		{{ invoice_form.sale_date.label_tag}}
+		{{ invoice_form.sale_date}}
+		<br/>				
+		
+	</fieldset>
+
+	<input type="button" onclick="addInvoiceItem(); return false" value="Add Invoice Item" />
+			
+	<table id='tbl-invoice-items'>
+		<thead>
+			<tr>
+				<td>Description</td>
+				<td>Unit Price</td>
+				<td>Quantity</td>
+			</tr>
+		</thead>
+		<tbody>
+			{% for invoice_item in invoice_item_forms %}
+				<tr>
+					<td>{{ invoice_item.description }}</td>
+					<td>{{ invoice_item.unit_price }}</td>
+					<td>{{ invoice_item.quantity }}</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+		</table>
+
+		<input type='submit' value='Create'  />
+	
+</form>
+
+{% endblock %}

@@ -18,8 +18,6 @@ class Test_Language(BaseAppengineDatastoreTester):
         """ Test new language creation """
         language = helpers.create_dummy_language(1)
         self.verify_entity_instance(language, LanguageEntity)
-        key = language.key()
-        print key
     
     def test_create_existing_language(self):
         """ Verify that adding an existing language generates an exception """

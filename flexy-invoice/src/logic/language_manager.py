@@ -27,7 +27,7 @@ class LanguageManager:
             ((1, "Italian"), ...)
         """
         languages = LanguageEntity.all().order('name').run()
-        tuple = [(language.key().id(), language.name) for language in languages]
+        list = [(language.key().id(), language.name) for language in languages]
         
-        return tuple
+        return list
         
