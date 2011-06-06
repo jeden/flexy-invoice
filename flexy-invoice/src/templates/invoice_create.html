@@ -8,14 +8,50 @@
 
 {% block content %}
 
-<script>
-$(document).ready(function() {
-	$('#invoice-invoice_date, #invoice-sale_date').datepicker({dateFormat: 'yy-mm-dd'});
-});
+<script type='text/javascript'>
+	dojo.require('dijit.form.Form');
+	dojo.require('dijit.form.Select');
+	dojo.require('dijit.form.Button');
+	dojo.require('dijit.form.TextBox');
+	dojo.require('dijit.form.ValidationTextBox');
+	dojo.require('dijit.form.DateTextBox');
+	dojo.require('dijit.form.CurrencyTextBox');
+	dojo.require('dijit.form.NumberSpinner');
+
+	dojo.require('dojox.form.BusyButton');
+	dojo.require('dojox.validate');
+	dojo.require('dojox.validate.web');
+	
+	dojo.addOnLoad(function() {
+		loadInvoiceItemTemplate();
+		
+		dojo.parser.parse(dojo.body());
+		
+		dojo.connect(dijit.byId('btn-create-invoice'), '_onClick', function(e) {
+			dijit.byId('form-create-invoice').submit();
+		});
+		
+		dojo.connect(dijit.byId('form-create-invoice'), 'onSubmit', function(e) {
+			var ret;
+			if (this.validate())
+				ret = true;
+			else {
+				dijit.byId('btn-create-invoice').resetTimeout();
+				ret = false;
+			}
+			
+		});
+		
+		dojo.connect(dijit.byId('btn-add-invoice-item'), 'onClick', function(e) {
+			addInvoiceItem();
+		});
+	});
 </script>
 
-<form method='post'>
+<form method='post' id='form-create-invoice' name='form-create-invoice' dojoType='dijit.form.Form'>
 	{{ invoice_form.errors }}
+	
+	<input type='text' dojoType='dijit.form.ValidationTextBox' />
 	
 	<fieldset>
 		{{ invoice_form.items }}
@@ -24,9 +60,10 @@ $(document).ready(function() {
 		
 		{{ invoice_form.client.label_tag}}
 		{{ invoice_form.client }}
+		
 		<br/>
 		{{ invoice_form.currency.label_tag}}
-		{{ invoice_form.currency}}
+		{{ invoice_form.currency }}
 		<br/>				
 
 		{{ invoice_form.invoice_no.label_tag}}
@@ -38,10 +75,9 @@ $(document).ready(function() {
 		{{ invoice_form.sale_date.label_tag}}
 		{{ invoice_form.sale_date}}
 		<br/>				
-		
 	</fieldset>
 
-	<input type="button" onclick="addInvoiceItem(); return false" value="Add Invoice Item" />
+	<input type="button" id='btn-add-invoice-item' value="Add Invoice Item"  label='Add Invoice Item' dojoType='dijit.form.Button' ></input>
 			
 	<table id='tbl-invoice-items'>
 		<thead>
@@ -60,9 +96,9 @@ $(document).ready(function() {
 				</tr>
 			{% endfor %}
 		</tbody>
-		</table>
+	</table>
 
-		<input type='submit' value='Create'  />
+	<button id='btn-create-invoice'  dojoType='dojox.form.BusyButton'  busyLabel='Creating Invoice...'>Create Invoice	</button>
 	
 </form>
 

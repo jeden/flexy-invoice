@@ -11,6 +11,7 @@ from google.appengine.api.users import get_current_user
 from logic.currency_manager import CurrencyManager
 from logic.invoice_manager import InvoiceManager
 import datetime
+from util.dojifier import dojify_form, DojoType, DojoControlType
 
 class InvoiceForm(forms.Form):
     client = forms.TypedChoiceField(label = 'Client', coerce = int, empty_value = None) 
@@ -19,6 +20,15 @@ class InvoiceForm(forms.Form):
     invoice_date = forms.DateField(label = "Invoice Date", input_formats = ['%Y-%m-%d'])
     sale_date = forms.DateField(label = "Sale Date", input_formats = ['%Y-%m-%d'])
     items = forms.IntegerField(widget = forms.HiddenInput)
+
+    dojify_form ([
+                  DojoType(client, forms.Select, DojoControlType.Select, True),
+                  DojoType(currency, forms.Select, DojoControlType.Select, True),
+                  DojoType(invoice_no, forms.TextInput, DojoControlType.ValidationTextBox, True),
+                  DojoType(invoice_date, forms.DateInput, DojoControlType.DateTextBox, True, {'datePattern': 'yyyy-MM-dd'}),
+                  DojoType(sale_date, forms.DateInput, DojoControlType.DateTextBox, True, {'datePattern': 'yyyy-MM-dd'}),
+                  ])
+    
 
     def __init__(self, invoice_items = 1, *args, **kwargs):
         super(InvoiceForm, self).__init__(*args, **kwargs)
@@ -49,6 +59,12 @@ class InvoiceItemForm(forms.Form):
     description = forms.CharField(label = 'Description')
     unit_price = forms.FloatField(label = 'Unit price')
     quantity = forms.FloatField(label = 'Quantity')
+
+    dojify_form([
+                 DojoType(description, forms.TextInput, DojoControlType.ValidationTextBox, True),
+                 DojoType(unit_price, forms.TextInput, DojoControlType.CurrencyTextBox, True),
+                 DojoType(quantity, forms.TextInput, DojoControlType.NumberSpinner, True)
+    ])
 
     def __init__(self, index, *args, **kwargs):
         super(InvoiceItemForm, self).__init__(*args, **kwargs)

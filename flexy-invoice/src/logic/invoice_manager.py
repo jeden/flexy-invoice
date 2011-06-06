@@ -8,6 +8,9 @@ from logic.client_manager import ClientManager
 from logic.currency_manager import CurrencyManager
 from google.appengine.ext import db
 
+class InvoiceException(Exception):
+    pass
+
 class InvoiceManager:
     """ Invoice creation and management """
     
@@ -50,7 +53,13 @@ class InvoiceManager:
         return invoice_item
 
     def save(self):
-        ''' Save the invoice along with its invoice items '''
+        ''' 
+        Save the invoice along with its invoice items
+        If no invoice item has been provided, an InvoiceException is raised 
+        '''
+
+        if not self._invoice_items:
+            raise InvoiceException();        
         
         # Save the invoice
         self._invoice.put()
