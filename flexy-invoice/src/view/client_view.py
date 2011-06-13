@@ -11,6 +11,7 @@ from logic.client_manager import ClientManager
 from google.appengine.api import users
 from util.base_handler import BaseProtectedHandler
 from logic.language_manager import LanguageManager
+from util.dojifier import dojify_form, DojoType, DojoControlType
 
 class ClientForm(djangoforms.ModelForm):
     """ Form for creating and editing a client """
@@ -19,6 +20,14 @@ class ClientForm(djangoforms.ModelForm):
     email = forms.EmailField(label = 'Email')
     default_currency = forms.ChoiceField(label = 'Default Currency')
     default_language = forms.ChoiceField(label = "Default Language")
+    
+    dojify_form([
+            DojoType(field = name, dojo_type = DojoControlType.ValidationTextBox, required = True),
+            DojoType(field = address, dojo_type = DojoControlType.Textarea, required = True),
+            DojoType(field = email, dojo_type = DojoControlType.ValidationTextBox, required = True, attributes = {'regExp': '[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}'}),
+            DojoType(field = default_currency, dojo_type = DojoControlType.Select, required = True),
+            DojoType(field = default_language, dojo_type = DojoControlType.Select, required = True)            
+    ])
     
     def __init__(self, *args, **kwargs):
         super(ClientForm, self).__init__(*args, **kwargs)

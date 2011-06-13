@@ -22,11 +22,11 @@ class InvoiceForm(forms.Form):
     items = forms.IntegerField(widget = forms.HiddenInput)
 
     dojify_form ([
-                  DojoType(client, forms.Select, DojoControlType.Select, True),
-                  DojoType(currency, forms.Select, DojoControlType.Select, True),
-                  DojoType(invoice_no, forms.TextInput, DojoControlType.ValidationTextBox, True),
-                  DojoType(invoice_date, forms.DateInput, DojoControlType.DateTextBox, True, {'datePattern': 'yyyy-MM-dd'}),
-                  DojoType(sale_date, forms.DateInput, DojoControlType.DateTextBox, True, {'datePattern': 'yyyy-MM-dd'}),
+                  DojoType(field = client, dojo_type = DojoControlType.Select, required = True),
+                  DojoType(field = currency, dojo_type = DojoControlType.Select, required = True),
+                  DojoType(field = invoice_no, dojo_type = DojoControlType.ValidationTextBox, required = True),
+                  DojoType(field = invoice_date, dojo_type = DojoControlType.DateTextBox, required = True, constraints = {'datePattern': 'yyyy-MM-dd'}),
+                  DojoType(field = sale_date, dojo_type = DojoControlType.DateTextBox, required = True, constraints = {'datePattern': 'yyyy-MM-dd'}),
                   ])
     
 
@@ -61,10 +61,15 @@ class InvoiceItemForm(forms.Form):
     quantity = forms.FloatField(label = 'Quantity')
 
     dojify_form([
-                 DojoType(description, forms.TextInput, DojoControlType.ValidationTextBox, True),
-                 DojoType(unit_price, forms.TextInput, DojoControlType.CurrencyTextBox, True),
-                 DojoType(quantity, forms.TextInput, DojoControlType.NumberSpinner, True)
+                 DojoType(field = description, dojo_type = DojoControlType.ValidationTextBox, required = True),
+                 DojoType(field = unit_price, dojo_type = DojoControlType.CurrencyTextBox, required = True),
+                 DojoType(field = quantity, dojo_type = DojoControlType.NumberSpinner, required = True)
     ])
+
+    unit_price.widget.attrs['size'] = '6'
+    unit_price.widget.attrs['class'] = 'currency'
+    quantity.widget.attrs['size'] = '6'
+    quantity.widget.attrs['class'] = 'quantity'
 
     def __init__(self, index, *args, **kwargs):
         super(InvoiceItemForm, self).__init__(*args, **kwargs)

@@ -1,11 +1,14 @@
 body {
 	background-color: #FCFCFC;
-	font: 100%/1 sans-serif;
+	font: 100%/1 verdana;
+}
+
+form {
+	font: 80%/1 verdana;
 }
 
 fieldset {
 	padding: 1em;
-	font: 80%/1 sans-serif;
 	border: none;
 }
 
@@ -27,7 +30,22 @@ fieldset label {
 	color: #444;
 }
 
+.dijitReset .dijitInline .dijitSelectLabel {
+	width: 10em;
+	overflow: hidden;
+}
+
 .disabled {
 	text-color: #777;
 	background-color: #EEE;
+}
+
+.currency {
+	width: 8em;
+	text-align: right;
+}
+
+.quantity {
+	width: 5em;
+	text-align: right;
 }

@@ -4,13 +4,43 @@
 
 {% block content %}
 
-<form method='post'>
+<script type='text/javascript'>
+	dojo.require('dijit.form.Form');
+	dojo.require('dijit.form.ValidationTextBox');
+	dojo.require('dijit.form.Textarea');
+	dojo.require('dijit.form.Select');
+	dojo.require('dojox.form.BusyButton');
+
+	dojo.require('dojox.validate');
+	dojo.require('dojox.validate.web');
+
+	dojo.addOnLoad(function() {
+		dojo.parser.parse(dojo.body());
+
+		dojo.connect(dijit.byId('btn-add-client'), '_onClick', function(e) {
+			dijit.byId('form-add-client').submit();
+		});
+		
+		dojo.connect(dijit.byId('form-add-client'), 'onSubmit', function(e) {
+			var ret;
+			if (this.validate())
+				ret = true;
+			else {
+				dijit.byId('btn-add-client').resetTimeout();
+				ret = false;
+			}
+			
+		});
+	});
+</script>
+
+<form method='post'  dojoType='dijit.form.Form' id='form-add-client'>
 	<fieldset>
 		<legend>Create New Client</legend>
 		
 		{% include '_form_template.html' %}
 		
-		<input type='submit' value='Create'  />
+		<button busyLabel='Creating...' dojoType='dojox.form.BusyButton'  id='btn-add-client' >Create</button>
 	</fieldset>
 	
 </form>
