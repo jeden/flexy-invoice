@@ -25,6 +25,7 @@
 	dojo.addOnLoad(function() {
 		loadInvoiceItemTemplate();
 		
+		$('#1_btn-remove-invoice-item').remove();
 		dojo.parser.parse(dojo.body());
 		
 		dojo.connect(dijit.byId('btn-create-invoice'), '_onClick', function(e) {
@@ -50,7 +51,9 @@
 
 <form method='post' id='form-create-invoice' name='form-create-invoice' dojoType='dijit.form.Form'>
 	{{ invoice_form.errors }}
-	
+
+	<input type='hidden' id='h-last-invoice-item-index'  name='h-last-invoice-item-index'  value='1' />
+
 	<fieldset>
 		{{ invoice_form.items }}
 		
@@ -87,10 +90,13 @@
 		</thead>
 		<tbody>
 			{% for invoice_item in invoice_item_forms %}
-				<tr>
+				<tr id='invoice-items-row1'>
 					<td>{{ invoice_item.description }}</td>
 					<td>{{ invoice_item.unit_price }}</td>
 					<td>{{ invoice_item.quantity }}</td>
+					<td>
+						<input type='button' label="Remove" value='Remove' dojoType='dijit.form.Button'  id='{{ forloop.counter }}_btn-remove-invoice-item' onClick='deleteInvoiceItem({{ forloop.counter }})' />
+					</td>
 				</tr>
 			{% endfor %}
 		</tbody>

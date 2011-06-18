@@ -25,8 +25,8 @@ class InvoiceForm(forms.Form):
                   DojoType(field = client, dojo_type = DojoControlType.Select, required = True),
                   DojoType(field = currency, dojo_type = DojoControlType.Select, required = True),
                   DojoType(field = invoice_no, dojo_type = DojoControlType.ValidationTextBox, required = True),
-                  DojoType(field = invoice_date, dojo_type = DojoControlType.DateTextBox, required = True, constraints = {'datePattern': 'yyyy-MM-dd'}),
-                  DojoType(field = sale_date, dojo_type = DojoControlType.DateTextBox, required = True, constraints = {'datePattern': 'yyyy-MM-dd'}),
+                  DojoType(field = invoice_date, dojo_type = DojoControlType.DateTextBox, required = True, constraints = {'datePattern': "'yyyy-MM-dd'"}),
+                  DojoType(field = sale_date, dojo_type = DojoControlType.DateTextBox, required = True, constraints = {'datePattern': "'yyyy-MM-dd'"}),
                   ])
     
 
@@ -63,7 +63,7 @@ class InvoiceItemForm(forms.Form):
     dojify_form([
                  DojoType(field = description, dojo_type = DojoControlType.ValidationTextBox, required = True),
                  DojoType(field = unit_price, dojo_type = DojoControlType.CurrencyTextBox, required = True),
-                 DojoType(field = quantity, dojo_type = DojoControlType.NumberSpinner, required = True)
+                 DojoType(field = quantity, dojo_type = DojoControlType.NumberSpinner, required = True, constraints = {'min': 1, 'smallDelta': 1})
     ])
 
     unit_price.widget.attrs['size'] = '6'
@@ -91,10 +91,17 @@ class CreateInvoiceHandler(BaseProtectedHandler):
         invoice_manager = InvoiceManager(self._user_session.get_user())
         
         invoice_form = InvoiceForm(data = self.request.POST)
-        items = invoice_form.fields['items'].to_python(self.request.POST['invoice-items']) or 0
-        invoice_item_forms = [InvoiceItemForm(index + 1, self.request.POST) for index in range(0, items)]
         
-        if invoice_form.is_valid():
+        items = invoice_form.fields['items'].to_python(self.request.POST['invoice-items']) or 0
+        max_item_index = int(self.request.POST['h-last-invoice-item-index']) or 0
+        
+        invoice_item_forms = [InvoiceItemForm(index + 1, self.request.POST) for index in range(0, max_item_index) if self.request.POST.has_key('%i_invoice_item-description' % (index + 1))]
+        
+        if items > max_item_index:
+            commit = False
+        elif items == 0:
+            commit = False
+        elif invoice_form.is_valid():
             # Validates the invoice items
             commit = True
             for form in invoice_item_forms:

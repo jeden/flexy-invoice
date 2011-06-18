@@ -36,10 +36,10 @@ class DojoType:
         self.attributes = attributes.copy()
 
         if style:
-            self.attributes['style'] = '; '.join('%s: %s' % (key, value) for key, value in style.items())
+            self.attributes['style'] = ';'.join('%s: %s' % (key, value) for key, value in style.items())
 
         if style_class:
             self.attributes['class'] = ' '.join(value for value in style_class)
 
         if constraints:
-            self.attributes['constraints'] = "; ".join("{%s: '%s'}"% (key, value) for key, value in constraints.items())
+            self.attributes['constraints'] = '{%s}' % " ,".join("%s: %s"% (key, value) for key, value in constraints.items())
