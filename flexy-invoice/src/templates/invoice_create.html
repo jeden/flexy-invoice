@@ -9,47 +9,18 @@
 {% block content %}
 
 <script type='text/javascript'>
-	dojo.require('dijit.form.Form');
-	dojo.require('dijit.form.Select');
-	dojo.require('dijit.form.Button');
-	dojo.require('dijit.form.TextBox');
-	dojo.require('dijit.form.ValidationTextBox');
-	dojo.require('dijit.form.DateTextBox');
-	dojo.require('dijit.form.CurrencyTextBox');
-	dojo.require('dijit.form.NumberSpinner');
-
-	dojo.require('dojox.form.BusyButton');
-	dojo.require('dojox.validate');
-	dojo.require('dojox.validate.web');
 	
-	dojo.addOnLoad(function() {
+	$(document).ready(function() {
+		$('#invoice-invoice_date').datepicker({ dateFormat: 'yy-mm-dd'});
+		$('#invoice-sale_date').datepicker({ dateFormat: 'yy-mm-dd'});
+
 		loadInvoiceItemTemplate();
-		
 		$('#1_btn-remove-invoice-item').remove();
-		dojo.parser.parse(dojo.body());
-		
-		dojo.connect(dijit.byId('btn-create-invoice'), '_onClick', function(e) {
-			dijit.byId('form-create-invoice').submit();
-		});
-		
-		dojo.connect(dijit.byId('form-create-invoice'), 'onSubmit', function(e) {
-			var ret;
-			if (this.validate())
-				ret = true;
-			else {
-				dijit.byId('btn-create-invoice').resetTimeout();
-				ret = false;
-			}
-			
-		});
-		
-		dojo.connect(dijit.byId('btn-add-invoice-item'), 'onClick', function(e) {
-			addInvoiceItem();
-		});
 	});
+	
 </script>
 
-<form method='post' id='form-create-invoice' name='form-create-invoice' dojoType='dijit.form.Form'>
+<form method='post' id='form-create-invoice' name='form-create-invoice'>
 	{{ invoice_form.errors }}
 
 	<input type='hidden' id='h-last-invoice-item-index'  name='h-last-invoice-item-index'  value='1' />
@@ -78,7 +49,7 @@
 		<br/>				
 	</fieldset>
 
-	<input type="button" id='btn-add-invoice-item' value="Add Invoice Item"  label='Add Invoice Item' dojoType='dijit.form.Button' ></input>
+	<input type='submit' id='btn-add-invoice-item'  onclick='addInvoiceItem()' novalidate value='Add invoice item' /> 
 			
 	<table id='tbl-invoice-items'>
 		<thead>
@@ -95,14 +66,14 @@
 					<td>{{ invoice_item.unit_price }}</td>
 					<td>{{ invoice_item.quantity }}</td>
 					<td>
-						<input type='button' label="Remove" value='Remove' dojoType='dijit.form.Button'  id='{{ forloop.counter }}_btn-remove-invoice-item' onClick='deleteInvoiceItem({{ forloop.counter }})' />
+						<input type='button' onclick='deleteInvoiceItem({{ forloop.counter }})' value='Remove' id='{{ forloop.counter }}_btn-remove-invoice-item' />
 					</td>
 				</tr>
 			{% endfor %}
 		</tbody>
 	</table>
 
-	<button id='btn-create-invoice'  dojoType='dojox.form.BusyButton'  busyLabel='Creating Invoice...'>Create Invoice	</button>
+	<button id='btn-create-invoice' >Create Invoice</button>
 	
 </form>
 

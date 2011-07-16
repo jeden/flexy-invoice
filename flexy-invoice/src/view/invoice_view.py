@@ -10,8 +10,8 @@ from logic.client_manager import ClientManager
 from google.appengine.api.users import get_current_user
 from logic.currency_manager import CurrencyManager
 from logic.invoice_manager import InvoiceManager
+from view import Select, TextInput, DateInput, NumberInput
 import datetime
-from util.dojifier import dojify_form, DojoType, DojoControlType
 
 class InvoiceForm(forms.Form):
     client = forms.TypedChoiceField(label = 'Client', coerce = int, empty_value = None) 
@@ -21,14 +21,11 @@ class InvoiceForm(forms.Form):
     sale_date = forms.DateField(label = "Sale Date", input_formats = ['%Y-%m-%d'])
     items = forms.IntegerField(widget = forms.HiddenInput)
 
-    dojify_form ([
-                  DojoType(field = client, dojo_type = DojoControlType.Select, required = True),
-                  DojoType(field = currency, dojo_type = DojoControlType.Select, required = True),
-                  DojoType(field = invoice_no, dojo_type = DojoControlType.ValidationTextBox, required = True),
-                  DojoType(field = invoice_date, dojo_type = DojoControlType.DateTextBox, required = True, constraints = {'datePattern': "'yyyy-MM-dd'"}),
-                  DojoType(field = sale_date, dojo_type = DojoControlType.DateTextBox, required = True, constraints = {'datePattern': "'yyyy-MM-dd'"}),
-                  ])
-    
+    client.widget = Select()
+    currency.widget = Select()
+    invoice_no.widget = TextInput(placeholder = 'Invoice number')
+    invoice_date.widget = DateInput(placeholder = 'Invoice date')
+    sale_date.widget = DateInput(placeholder = 'Sale date')
 
     def __init__(self, invoice_items = 1, *args, **kwargs):
         super(InvoiceForm, self).__init__(*args, **kwargs)
@@ -60,16 +57,9 @@ class InvoiceItemForm(forms.Form):
     unit_price = forms.FloatField(label = 'Unit price')
     quantity = forms.FloatField(label = 'Quantity')
 
-    dojify_form([
-                 DojoType(field = description, dojo_type = DojoControlType.ValidationTextBox, required = True),
-                 DojoType(field = unit_price, dojo_type = DojoControlType.CurrencyTextBox, required = True),
-                 DojoType(field = quantity, dojo_type = DojoControlType.NumberSpinner, required = True, constraints = {'min': 1, 'smallDelta': 1})
-    ])
-
-    unit_price.widget.attrs['size'] = '6'
-    unit_price.widget.attrs['class'] = 'currency'
-    quantity.widget.attrs['size'] = '6'
-    quantity.widget.attrs['class'] = 'quantity'
+    description.widget = TextInput(placeholder = 'Description')
+    unit_price.widget = NumberInput(placeholder ='Unit price', attrs = { 'size' : '6', 'class': 'currency' })
+    quantity.widget = NumberInput(placeholder = 'Quantity', attrs = { 'size': '6', 'class': 'quantity' })
 
     def __init__(self, index, *args, **kwargs):
         super(InvoiceItemForm, self).__init__(*args, **kwargs)

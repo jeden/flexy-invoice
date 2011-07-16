@@ -4,14 +4,13 @@ Created on Apr 26, 2011
 @author: Antonio Bello - Elapsus
 '''
 from model.client_models import ClientEntity, ClientContactEntity
-from logic.user_manager import UserManager
 from google.appengine.ext import db
 
 class ClientManager:
     __QUERY_LIST_CLIENT = db.GqlQuery('SELECT * FROM ClientEntity WHERE user = :user ORDER BY name')
     
-    def __init__(self, account):
-        self._user = UserManager.retrieve_user_by_account(account)
+    def __init__(self, user):
+        self._user = user
          
     def add_client(self, name, address, email, default_currency_id, default_language_id):
         """ Create a new client """

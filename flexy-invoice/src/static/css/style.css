@@ -30,11 +30,6 @@ fieldset label {
 	color: #444;
 }
 
-.dijitReset .dijitInline .dijitSelectLabel {
-	width: 10em;
-	overflow: hidden;
-}
-
 .disabled {
 	text-color: #777;
 	background-color: #EEE;

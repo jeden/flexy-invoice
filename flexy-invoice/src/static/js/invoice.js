@@ -14,7 +14,9 @@ function addInvoiceItem() {
 
 	newRow.find('input').each(function() {
 		var newId = $(this).attr('id').replace(/^[\d]+/g, lastInvoiceItemIndex);
-		$(this).val('');
+		if ($(this).attr('type') != 'button')
+			$(this).val('');
+	
 		$(this).attr('id', newId);
 		$(this).attr('name', newId);
 	}).end().appendTo('#tbl-invoice-items');
@@ -23,7 +25,6 @@ function addInvoiceItem() {
 	
 	hInvoiceItems.val(index);
 	hLastInvoiceItemIndex.val(lastInvoiceItemIndex);
-	dojo.parser.parse(dojo.byId(newRowId));
 }
 
 function deleteInvoiceItem(row_number)

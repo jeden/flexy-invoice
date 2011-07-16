@@ -1,19 +1,18 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML>
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>FlexyInvoice - {% block title %} {% endblock %}</title>
 	<style type="text/css">
-		/*@import "http://ajax.googleapis.com/ajax/libs/dojo/1.6.0/dojo/resources/dojo.css";*/
-		@import "http://ajax.googleapis.com/ajax/libs/dojo/1.6.0/dijit/themes/claro/claro.css";
 		@import "/static/css/style.css" ;
+		@import "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/themes/smoothness/jquery-ui.css";
 	</style>
 	
-	<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/dojo/1.6.0/dojo/dojo.xd.js' djconfig='parseOnLoad:false'></script>
 	<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js'></script>
+	<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js'></script>
 	{% block head %}{% endblock %}
 </head>
-<body class="claro">
+<body>
 	<div id="header"></div>
 	<div id="content">
 		{% block content %} #CONTENT# {% endblock %}
