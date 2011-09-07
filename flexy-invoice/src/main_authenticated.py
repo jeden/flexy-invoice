@@ -8,6 +8,7 @@ Created on May 23, 2011
 # Ensure this block is at beginning of file
 
 import os
+
 os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 
 from google.appengine.dist import use_library
@@ -19,9 +20,9 @@ use_library('django', '1.2')
 
 import wsgiref
 from google.appengine.ext import webapp
-from view.client_view import AddClientHandler
-from util import render_template
+from view.client_view import AddClientHandler, ListClientsHandler, ListClientsAsync
 from view.invoice_view import CreateInvoiceHandler
+from flexy.utils.rendering import render_template
 
 class MainHandler(webapp.RequestHandler):
     def get(self):
@@ -30,8 +31,10 @@ class MainHandler(webapp.RequestHandler):
 
 def main():
     application = webapp.WSGIApplication([
+                                        ('/p/client/list', ListClientsHandler),
                                          ('/p/client/add', AddClientHandler),
-                                         ('/p/invoice/create', CreateInvoiceHandler)],
+                                         ('/p/invoice/create', CreateInvoiceHandler),
+                                         ('p/async/client/list', ListClientsAsync)],
                                          debug = True)
     wsgiref.handlers.CGIHandler().run(application)
 

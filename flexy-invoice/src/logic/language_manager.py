@@ -4,7 +4,7 @@ Created on Jun 1, 2011
 @author: Antonio Bello - Elapsus
 '''
 from model.domain_models import LanguageEntity
-from model.model_utils import DuplicatedEntityException
+from flexy.model.db_model import DuplicatedEntityException
 
 class LanguageException(Exception):
     pass

@@ -4,7 +4,6 @@ Created on Jun 1, 2011
 @author: Antonio Bello - Elapsus
 '''
 from model.user_models import UserAccountType
-from logic.invoice_manager import InvoiceManager
 from logic.client_manager import ClientManager
 from logic.currency_manager import CurrencyManager
 from logic.user_manager import UserManager

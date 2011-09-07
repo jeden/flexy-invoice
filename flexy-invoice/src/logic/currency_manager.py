@@ -4,8 +4,8 @@ Created on Apr 27, 2011
 @author: Antonio Bello - Elapsus
 '''
 from google.appengine.ext import db
-from model.model_utils import DuplicatedEntityException
 from model.domain_models import CurrencyEntity, ExchangeRateEntity
+from flexy.model.db_model import DuplicatedEntityException
 
 class CurrencyException(Exception):
     pass

@@ -4,14 +4,14 @@ Created on Jun 2, 2011
 @author: Antonio Bello - Elapsus
 '''
 from django import forms
-from util.base_handler import BaseProtectedHandler
-from util import render_template
 from logic.client_manager import ClientManager
 from google.appengine.api.users import get_current_user
 from logic.currency_manager import CurrencyManager
 from logic.invoice_manager import InvoiceManager
 from view import Select, TextInput, DateInput, NumberInput
 import datetime
+from flexy.web.handler.base_handler import BaseProtectedHandler
+from flexy.utils.rendering import render_template
 
 class InvoiceForm(forms.Form):
     client = forms.TypedChoiceField(label = 'Client', coerce = int, empty_value = None) 
@@ -34,7 +34,7 @@ class InvoiceForm(forms.Form):
         client_manager = ClientManager(user)
         
         # Initialize the client drop down
-        clients = client_manager.list_clients()
+        clients = client_manager.listify_clients()
         clients.insert(0, ('', ''))
         self.fields['client'].choices = clients
         

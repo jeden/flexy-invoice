@@ -12,8 +12,8 @@ use_library('django', '1.2')
 
 import wsgiref
 from google.appengine.ext import webapp
-from util import render_template
 from view.signup_view import SignupHandler
+from flexy.utils.rendering import render_template
 
 class MainHandler(webapp.RequestHandler):
     def get(self):

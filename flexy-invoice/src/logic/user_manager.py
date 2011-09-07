@@ -4,9 +4,7 @@ Created on Apr 28, 2011
 @author: Antonio Bello - Elapsus
 '''
 from model.user_models import UserEntity
-
-class UserNotFoundException(Exception):
-    pass
+from flexy.web.control.user import UserNotFoundException
 
 class UserManager:
     """ User management """

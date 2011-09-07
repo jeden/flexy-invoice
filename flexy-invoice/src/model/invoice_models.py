@@ -4,7 +4,6 @@ Created on Apr 26, 2011
 @author: Antonio Bello - Elapsus
 '''
 from google.appengine.ext import db
-from model.model_utils import check_for_uniqueness
 from model.user_models import UserEntity
 from model.client_models import ClientEntity
 from model.domain_models import CurrencyEntity

@@ -5,9 +5,9 @@ Created on May 24, 2011
 '''
 from google.appengine.api import users
 from logic.user_manager import UserManager
-from util import render_template
 from model.user_models import UserAccountType
-from util.base_handler import BaseHandler
+from flexy.web.handler.base_handler import BaseHandler
+from flexy.utils.rendering import render_template
 
 class SignupHandler(BaseHandler):
     def get(self):

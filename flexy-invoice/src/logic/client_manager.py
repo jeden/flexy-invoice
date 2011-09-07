@@ -25,16 +25,18 @@ class ClientManager:
         contact.put()
         return contact
         
-    def list_clients(self):
+    def listify_clients(self):
         '''
             Return the list of user clients, formatted to be used in a listbox 
             as a list of tuples (id, name)
         '''
-        self.__QUERY_LIST_CLIENT.bind(user = self._user)
-        clients = self.__QUERY_LIST_CLIENT.run()
-        list = [(client.key().id(), client.name) for client in clients]
+        return [(client.key().id(), client.name) for client in self.list_clients()]
         
-        return list
+    def list_clients(self):
+        """
+            Return the list of clients """
+        self.__QUERY_LIST_CLIENT.bind(user = self._user)
+        return self.__QUERY_LIST_CLIENT.run()
     
     @classmethod
     def find_by_id(cls, client_id):

@@ -4,14 +4,13 @@ Created on May 21, 2011
 @author: Antonio Bello - Elapsus
 '''
 from google.appengine.ext.db import djangoforms
-from util import render_template
 from django import forms 
 from logic.currency_manager import CurrencyManager
 from logic.client_manager import ClientManager
-from google.appengine.api import users
-from util.base_handler import BaseProtectedHandler
 from logic.language_manager import LanguageManager
 from view import EmailInput, TextInput, Textarea, Select
+from flexy.web.handler.base_handler import BaseProtectedHandler, BaseProtectedAsync
+from flexy.utils.rendering import render_template
 
 class ClientForm(djangoforms.ModelForm):
     """ Form for creating and editing a client """
@@ -66,3 +65,17 @@ class AddClientHandler(BaseProtectedHandler):
             client_manager.add_client(name, address, email, default_currency_id, default_language_id)
         else:
             self.get(form)
+            
+class ListClientsHandler(BaseProtectedHandler):
+    def get(self):
+        client_manager = ClientManager(self._user_session.get_user())
+        clients = client_manager.list_clients() 
+        return render_template(self, 'client_list.html', {
+                                                          'formset': clients
+                                                           })
+
+class ListClientsAsync(BaseProtectedAsync):
+    def get(self):
+        client_manager = ClientManager(self._user_session.get_user())
+        clients = client_manager.list_clients() 
+        

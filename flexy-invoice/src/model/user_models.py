@@ -4,8 +4,7 @@ Created on Apr 28, 2011
 @author: Antonio Bello - Elapsus
 '''
 from google.appengine.ext import db
-from util.Enum import Enum
-from model.model_utils import check_for_uniqueness
+from flexy.utils.enum import Enum
 
 UserAccountType = Enum(['FREE'])
 UserAccountStatus = Enum(['ACTIVE'])

@@ -4,9 +4,9 @@ Created on Apr 30, 2011
 @author: Antonio Bello - Elapsus
 '''
 from google.appengine.ext import db
-from model.model_utils import check_for_uniqueness
+from flexy.model.db_model import DbModel
 
-class CurrencyEntity(db.Model):
+class CurrencyEntity(DbModel):
     """ Currency entity """
     
     name = db.StringProperty(required = True)
@@ -15,7 +15,7 @@ class CurrencyEntity(db.Model):
     
     @classmethod
     def create(cls, name, code, symbol):
-        check_for_uniqueness(CurrencyEntity, 'code', code)
+        cls.check_for_uniqueness(CurrencyEntity, 'code', code)
         return cls(name = name, symbol = symbol, code = code)
     
 class ExchangeRateEntity(db.Model):
@@ -37,6 +37,6 @@ class LanguageEntity(db.Model):
     
     @classmethod
     def create(cls, name):
-        check_for_uniqueness(LanguageEntity, 'name', name)
+        cls.check_for_uniqueness(LanguageEntity, 'name', name)
         return cls(name = name)
     
