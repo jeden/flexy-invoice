@@ -1,0 +1,16 @@
+<form>
+	<table>
+		<thead></thead>
+		<tbody>
+			{% for client in formset %}
+
+			<tr>
+				<td>{{ client.name }}</td>
+				<td>{{ client.address }}</td>
+			</tr>
+
+
+			{% endfor %}
+		</tbody>
+	</table>
+</form>

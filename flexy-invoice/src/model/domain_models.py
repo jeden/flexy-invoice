@@ -18,7 +18,7 @@ class CurrencyEntity(DbModel):
         cls.check_for_uniqueness(CurrencyEntity, 'code', code)
         return cls(name = name, symbol = symbol, code = code)
     
-class ExchangeRateEntity(db.Model):
+class ExchangeRateEntity(DbModel):
     """ Exchange rate between two currencies """
     from_currency = db.ReferenceProperty(reference_class = CurrencyEntity, required = True, collection_name = "to_currencies")
     to_currency = db.ReferenceProperty(reference_class = CurrencyEntity, required = True, collection_name = "from_currencies")
@@ -30,7 +30,7 @@ class ExchangeRateEntity(db.Model):
         """ Create a new exchange rate instance """
         return cls(from_currency = from_currency, to_currency = to_currency, date = date, rate = rate)
     
-class LanguageEntity(db.Model):
+class LanguageEntity(DbModel):
     """ Language entity """
     
     name = db.StringProperty(required = True)

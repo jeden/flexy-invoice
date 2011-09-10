@@ -5,12 +5,13 @@ Created on Apr 28, 2011
 '''
 from google.appengine.ext import db
 from flexy.utils.enum import Enum
+from flexy.model.db_model import DbModel
 
 UserAccountType = Enum(['FREE'])
 UserAccountStatus = Enum(['ACTIVE'])
     
 
-class UserEntity(db.Model):
+class UserEntity(DbModel):
     """ User """
     user = db.UserProperty(required = True)
     account_type = db.StringProperty(required = True, choices = UserAccountType)

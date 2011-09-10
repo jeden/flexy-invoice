@@ -32,11 +32,12 @@ class ClientManager:
         '''
         return [(client.key().id(), client.name) for client in self.list_clients()]
         
-    def list_clients(self):
+    def list_clients(self, start_from = 0, size = 10000):
         """
-            Return the list of clients """
+            Return the list of clients 
+        """
         self.__QUERY_LIST_CLIENT.bind(user = self._user)
-        return self.__QUERY_LIST_CLIENT.run()
+        return self.__QUERY_LIST_CLIENT.fetch(size, start_from)
     
     @classmethod
     def find_by_id(cls, client_id):

@@ -7,8 +7,9 @@ from google.appengine.ext import db
 from model.user_models import UserEntity
 from model.client_models import ClientEntity
 from model.domain_models import CurrencyEntity
+from flexy.model.db_model import DbModel
 
-class InvoiceEntity(db.Model):
+class InvoiceEntity(DbModel):
     ''' Invoice '''
     user = db.ReferenceProperty(reference_class = UserEntity, required = True, collection_name = 'invoices')
     client = db.ReferenceProperty(reference_class = ClientEntity, required = True, collection_name = 'invoices')
@@ -25,7 +26,7 @@ class InvoiceEntity(db.Model):
     def create(cls, user, client, currency, invoice_no, invoice_date, sale_date):
         return cls(user = user, client = client, currency = currency, invoice_no = invoice_no, invoice_date = invoice_date, sale_date = sale_date)
 
-class InvoiceItemEntity(db.Model):
+class InvoiceItemEntity(DbModel):
     ''' Invoice item '''
     invoice = db.ReferenceProperty(reference_class = InvoiceEntity, collection_name = 'invoice_items') 
     description = db.StringProperty(required = True)

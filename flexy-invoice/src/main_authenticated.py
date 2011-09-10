@@ -20,9 +20,10 @@ use_library('django', '1.2')
 
 import wsgiref
 from google.appengine.ext import webapp
-from view.client_view import AddClientHandler, ListClientsHandler, ListClientsAsync
+from view.client_view import AddClientHandler, ListClientsHandler, ClientAsync
 from view.invoice_view import CreateInvoiceHandler
 from flexy.utils.rendering import render_template
+from flexy.web.handler.base_handler import REGEX_URL_PARAM
 
 class MainHandler(webapp.RequestHandler):
     def get(self):
@@ -34,8 +35,9 @@ def main():
                                         ('/p/client/list', ListClientsHandler),
                                          ('/p/client/add', AddClientHandler),
                                          ('/p/invoice/create', CreateInvoiceHandler),
-                                         ('p/async/client/list', ListClientsAsync)],
-                                         debug = True)
+                                         ('/p/async/client' + REGEX_URL_PARAM, ClientAsync)
+                                    ],
+                                    debug = True)
     wsgiref.handlers.CGIHandler().run(application)
 
 if __name__ == "__main__":

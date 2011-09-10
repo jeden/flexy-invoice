@@ -6,8 +6,9 @@ Created on Apr 26, 2011
 from google.appengine.ext import db
 from model.user_models import UserEntity
 from model.domain_models import CurrencyEntity, LanguageEntity
+from flexy.model.db_model import DbModel
 
-class ClientEntity(db.Model):
+class ClientEntity(DbModel):
     """
         An entity that can be invoiced.
     """
@@ -25,7 +26,7 @@ class ClientEntity(db.Model):
     def __repr__(self):
         return self.name
         
-class ClientContactEntity(db.Model):
+class ClientContactEntity(DbModel):
     """
         A client contact  - usually the person the invoice is sent to.
     """

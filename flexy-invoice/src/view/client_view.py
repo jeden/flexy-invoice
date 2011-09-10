@@ -9,8 +9,10 @@ from logic.currency_manager import CurrencyManager
 from logic.client_manager import ClientManager
 from logic.language_manager import LanguageManager
 from view import EmailInput, TextInput, Textarea, Select
-from flexy.web.handler.base_handler import BaseProtectedHandler, BaseProtectedAsync
+from flexy.web.handler.base_handler import BaseProtectedHandler
 from flexy.utils.rendering import render_template
+from flexy.web.handler.command_base import CommandBase
+from flexy.web.handler.async_handler import AsyncHandler
 
 class ClientForm(djangoforms.ModelForm):
     """ Form for creating and editing a client """
@@ -68,14 +70,20 @@ class AddClientHandler(BaseProtectedHandler):
             
 class ListClientsHandler(BaseProtectedHandler):
     def get(self):
-        client_manager = ClientManager(self._user_session.get_user())
-        clients = client_manager.list_clients() 
-        return render_template(self, 'client_list.html', {
-                                                          'formset': clients
-                                                           })
+        return render_template(self, 'client_list.html')
 
-class ListClientsAsync(BaseProtectedAsync):
-    def get(self):
+class ClientListCommand(CommandBase):
+    def _execute(self):
         client_manager = ClientManager(self._user_session.get_user())
-        clients = client_manager.list_clients() 
-        
+        clients = client_manager.list_clients()
+        json = self.jsonize_jqgrid(clients)
+        return self.render_content(json) 
+                
+class ClientAsync(AsyncHandler):
+    routing_table = {
+                     'list': [ClientListCommand, {}]
+                     }
+    
+    def _get_routing_table(self):
+        return ClientAsync.routing_table
+

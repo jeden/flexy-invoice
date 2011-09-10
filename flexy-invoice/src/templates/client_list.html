@@ -1,10 +1,24 @@
 {% extends '_main_template.html' %}
 
-{% block title %}Add Client{% endblock %}
+{% block title %}Clients{% endblock %}
+
+{% block head %}
+	<script type='text/javascript' src='/static/js/client.js'></script>
+{% endblock %}
 
 {% block content %}
 
+<script language="javascript">
+$(document).ready(function() {
+	loadClientsGrid('Clients', '#tblClients', '#divClientsPager');
+})
+</script>
+
 <form>
+	<table id='tblClients'></table>
+	<div id='divClientsPager'></div>
+	
+
 	<table>
 		<thead></thead>
 		<tbody>
