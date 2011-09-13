@@ -29,8 +29,12 @@ class ClientManager:
         '''
             Return the list of user clients, formatted to be used in a listbox 
             as a list of tuples (id, name)
+            An element representing no selection is added at top
         '''
-        return [(client.key().id(), client.name) for client in self.list_clients()]
+        list = [(client.key().id(), client.name) for client in self.list_clients()]
+        list.insert(0, ('', ''))
+        return list 
+
         
     def list_clients(self, start_from = 0, size = 10000):
         """

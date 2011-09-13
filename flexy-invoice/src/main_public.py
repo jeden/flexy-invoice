@@ -17,7 +17,7 @@ from flexy.utils.rendering import render_template
 
 class MainHandler(webapp.RequestHandler):
     def get(self):
-        if not render_template(self, self.request.path):
+        if not render_template(self, 'home.html', {}):
             render_template(self)
 
 def main():

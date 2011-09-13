@@ -54,6 +54,18 @@ class CurrencyManager:
         return tuple
 
     @classmethod
+    def listify_currencies(cls):
+        '''
+            Return the list of currencies, formatted to be used in a listbox 
+            as a list of tuples (id, name)
+            An element representing no selection is added at top
+        '''
+        list = cls.list_currencies()
+        list.insert(0, ('', ''))
+        return list 
+
+
+    @classmethod
     def find_by_id(cls, currency_id):
         return CurrencyEntity.get_by_id(currency_id) 
 

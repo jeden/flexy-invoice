@@ -27,20 +27,12 @@ class InvoiceForm(forms.Form):
     invoice_date.widget = DateInput(placeholder = 'Invoice date')
     sale_date.widget = DateInput(placeholder = 'Sale date')
 
-    def __init__(self, invoice_items = 1, *args, **kwargs):
+    def __init__(self, clients, currencies, invoice_items = 1, *args, **kwargs):
         super(InvoiceForm, self).__init__(*args, **kwargs)
         
-        user = get_current_user()
-        client_manager = ClientManager(user)
-        
-        # Initialize the client drop down
-        clients = client_manager.listify_clients()
-        clients.insert(0, ('', ''))
         self.fields['client'].choices = clients
         
         #Initialize the currencies drop down
-        currencies = CurrencyManager.list_currencies()
-        currencies.insert(0, ('', ''))
         self.fields['currency'].choices = currencies
         
         self.fields['items'].initial = invoice_items
@@ -69,7 +61,16 @@ class InvoiceItemForm(forms.Form):
 class CreateInvoiceHandler(BaseProtectedHandler):
     ''' Create a new invoice '''
     
-    def get(self, invoice_form = InvoiceForm(), invoice_item_forms = [InvoiceItemForm(index = 1)]):
+    def get(self, invoice_form = None, invoice_item_forms = [InvoiceItemForm(index = 1)]):
+        user = self._user_session.get_user()
+        if invoice_form == None:
+            # Initialize the Invoice form
+            client_manager = ClientManager(user)
+            
+            clients = client_manager.listify_clients()
+            currencies = CurrencyManager.listify_currencies()
+            
+            invoice_form = InvoiceForm(clients, currencies)
         
         return render_template(self, 'invoice_create.html', {
                                                        'invoice_form': invoice_form,
