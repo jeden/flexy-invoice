@@ -73,6 +73,9 @@ class ListClientsHandler(BaseProtectedHandler):
         return render_template(self, 'client_list.html')
 
 class ClientListCommand(CommandBase):
+    """
+        Async command to retrieve clients in json format
+    """
     def _execute(self):
         client_manager = ClientManager(self._user_session.get_user())
         clients = client_manager.list_clients()
@@ -80,6 +83,9 @@ class ClientListCommand(CommandBase):
         return self.render_content(json) 
                 
 class ClientAsync(AsyncHandler):
+    """
+        Async handler to retrieve clients
+    """
     routing_table = {
                      'list': [ClientListCommand, {}]
                      }

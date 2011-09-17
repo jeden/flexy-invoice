@@ -41,3 +41,21 @@ function loadInvoiceItemTemplate()
 {
 	invoiceItemTemplate = $('#tbl-invoice-items tr:last').clone();
 }
+
+// Load invoices grid
+function loadInvoicesGrid(caption, tableId, pagerId) {
+	var params_base = setGridParams(caption, pagerId);
+	var params_spec = {
+		url: '/p/async/invoice/list',
+		colModel: [
+		           {name: 'invoice_no'},
+		           {name: 'client'},
+		           {name: 'invoice_date'},
+		           {name: 'sale_date'},
+		],
+		colNames: ['Invoice #', 'Client', 'Invoice Date', 'Sale Date'],
+		sortName: 'invoice_no',
+	};
+	
+	$(tableId).jqGrid($.extend(params_base, params_spec));
+}

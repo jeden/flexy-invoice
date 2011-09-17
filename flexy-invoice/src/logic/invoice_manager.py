@@ -14,6 +14,8 @@ class InvoiceException(Exception):
 class InvoiceManager:
     """ Invoice creation and management """
     
+    __QUERY_LIST_INVOICES = db.GqlQuery('SELECT * FROM InvoiceEntity WHERE user = :user ORDER BY invoice_date DESC')
+
     def __init__(self, user):
         self._user = user
         self._invoice = None
@@ -78,6 +80,14 @@ class InvoiceManager:
     def invoice_items(self):
         ''' Return the invoice items '''
         return self._invoice_items
+
+    def list_invoices(self, start_from = 0, size = 10000):
+        """
+            Return the list of invoices 
+        """
+        self.__QUERY_LIST_INVOICES.bind(user = self._user)
+        return self.__QUERY_LIST_INVOICES.fetch(size, start_from)
+
     
     #
     # PRIVATE METHODS

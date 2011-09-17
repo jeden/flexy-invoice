@@ -1,0 +1,23 @@
+{% extends '_main_template.html' %}
+
+{% block title %}Clients{% endblock %}
+
+{% block head %}
+	<script type='text/javascript' src='/static/js/grid.js'></script>
+	<script type='text/javascript' src='/static/js/invoice.js'></script>
+{% endblock %}
+
+{% block content %}
+
+<script language="javascript">
+$(document).ready(function() {
+	loadInvoicesGrid('Invoices', '#tblInvoices', '#divInvoicesPager');
+})
+</script>
+
+<form>
+	<table id='tblInvoices'></table>
+	<div id='divInvoicesPager'></div>
+</form>
+
+{% endblock %}

@@ -14,3 +14,14 @@ indexes:
   properties:
   - name: user
   - name: name
+
+- kind: InvoiceEntity
+  properties:
+  - name: user
+  - name: invoice_date
+    direction: desc
+
+- kind: InvoiceEntity
+  properties:
+  - name: user
+  - name: name

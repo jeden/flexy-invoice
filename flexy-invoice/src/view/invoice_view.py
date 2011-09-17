@@ -5,15 +5,19 @@ Created on Jun 2, 2011
 '''
 from django import forms
 from logic.client_manager import ClientManager
-from google.appengine.api.users import get_current_user
 from logic.currency_manager import CurrencyManager
 from logic.invoice_manager import InvoiceManager
 from view import Select, TextInput, DateInput, NumberInput
 import datetime
 from flexy.web.handler.base_handler import BaseProtectedHandler
 from flexy.utils.rendering import render_template
+from flexy.web.handler.command_base import CommandBase
+from flexy.web.handler.async_handler import AsyncHandler
 
 class InvoiceForm(forms.Form):
+    """
+        Django form for invoice model
+    """
     client = forms.TypedChoiceField(label = 'Client', coerce = int, empty_value = None) 
     currency = forms.TypedChoiceField(label = 'Currency', coerce = int, empty_value = None)
     invoice_no = forms.CharField(label="Invoice #")
@@ -45,6 +49,9 @@ class InvoiceForm(forms.Form):
         self.auto_id = '%s'
 
 class InvoiceItemForm(forms.Form):
+    """
+        Django form for invoice item
+    """
     description = forms.CharField(label = 'Description')
     unit_price = forms.FloatField(label = 'Unit price')
     quantity = forms.FloatField(label = 'Quantity')
@@ -60,14 +67,19 @@ class InvoiceItemForm(forms.Form):
         
 class CreateInvoiceHandler(BaseProtectedHandler):
     ''' Create a new invoice '''
+
+    def initialize(self, request, response):
+        """ Override to inizialize the session """
+        super(CreateInvoiceHandler, self).initialize(request, response)
+        
+        self._client_manager = ClientManager(self._user)
+        self._invoice_manager = InvoiceManager(self._user)
     
     def get(self, invoice_form = None, invoice_item_forms = [InvoiceItemForm(index = 1)]):
-        user = self._user_session.get_user()
         if invoice_form == None:
             # Initialize the Invoice form
-            client_manager = ClientManager(user)
             
-            clients = client_manager.listify_clients()
+            clients = self._client_manager.listify_clients()
             currencies = CurrencyManager.listify_currencies()
             
             invoice_form = InvoiceForm(clients, currencies)
@@ -78,10 +90,10 @@ class CreateInvoiceHandler(BaseProtectedHandler):
                                                        })
     def post(self):
         commit = False
-        
-        invoice_manager = InvoiceManager(self._user_session.get_user())
-        
-        invoice_form = InvoiceForm(data = self.request.POST)
+                
+        clients = self._client_manager.listify_clients()
+        currencies = CurrencyManager.listify_currencies()
+        invoice_form = InvoiceForm(data = self.request.POST, clients = clients, currencies = currencies)
         
         items = invoice_form.fields['items'].to_python(self.request.POST['invoice-items']) or 0
         max_item_index = int(self.request.POST['h-last-invoice-item-index']) or 0
@@ -101,7 +113,7 @@ class CreateInvoiceHandler(BaseProtectedHandler):
                     break
 
         if commit:
-            invoice_manager.create(
+            self._invoice_manager.create(
                                    client_id = invoice_form.cleaned_data['client'],
                                    currency_id = invoice_form.cleaned_data['currency'],
                                    invoice_no = invoice_form.cleaned_data['invoice_no'],
@@ -109,12 +121,39 @@ class CreateInvoiceHandler(BaseProtectedHandler):
                                    sale_date = invoice_form.cleaned_data['sale_date']
                                 )
             for invoice_item in invoice_item_forms:
-                invoice_manager.add_invoice_item(
+                self._invoice_manager.add_invoice_item(
                                                  description = invoice_item.cleaned_data['description'], 
                                                  quantity = invoice_item.cleaned_data['quantity'], 
                                                  unit_price = invoice_item.cleaned_data['unit_price']
                                             )
                 
-            invoice_manager.save()
+            self._invoice_manager.save()
         else:
             self.get(invoice_form, invoice_item_forms)
+
+class ListInvoicesHandler(BaseProtectedHandler):
+    def get(self):
+        return render_template(self, 'invoice_list.html')
+
+
+class InvoiceListCommand(CommandBase):
+    """
+        Async command to retrieve invoices in json format
+    """
+    def _execute(self):
+        invoice_manager = InvoiceManager(self._user_session.get_user())
+        invoices = invoice_manager.list_invoices()
+        json = self.jsonize_jqgrid(invoices)
+        return self.render_content(json) 
+                
+class InvoiceAsync(AsyncHandler):
+    """
+        Async handler to retrieve clients
+    """
+    routing_table = {
+                     'list': [InvoiceListCommand, {}]
+                     }
+    
+    def _get_routing_table(self):
+        return InvoiceAsync.routing_table
+
