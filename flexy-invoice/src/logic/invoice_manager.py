@@ -7,6 +7,7 @@ from model.invoice_models import InvoiceEntity, InvoiceItemEntity
 from logic.client_manager import ClientManager
 from logic.currency_manager import CurrencyManager
 from google.appengine.ext import db
+from logic.language_manager import LanguageManager
 
 class InvoiceException(Exception):
     pass
@@ -15,25 +16,35 @@ class InvoiceManager:
     """ Invoice creation and management """
     
     __QUERY_LIST_INVOICES = db.GqlQuery('SELECT * FROM InvoiceEntity WHERE user = :user ORDER BY invoice_date DESC')
-
+    
     def __init__(self, user):
         self._user = user
         self._invoice = None
         self._invoice_items = []
     
-    def create(self, client_id, currency_id, invoice_no, invoice_date, sale_date):
+    def create(self, client_id, invoice_no, invoice_date, sale_date, currency_id = None, language_id = None):
         '''
             Create a new invoice
         '''
         self._invoice_items = []
         
         client = ClientManager.find_by_id(client_id)
-        currency = CurrencyManager.find_by_id(currency_id)
+        
+        if currency_id is None:
+            currency = client.default_currency
+        else:
+            currency = CurrencyManager.find_by_id(currency_id)
+        
+        if language_id is None:
+            language = client.default_language
+        else:
+            language = LanguageManager.find_by_id(language_id)
         
         self._invoice = InvoiceEntity.create(
                                        user = self._user,
                                        client = client,
                                        currency = currency,
+                                       language = language,
                                        invoice_no = invoice_no,
                                        invoice_date = invoice_date,
                                        sale_date = sale_date
@@ -88,6 +99,15 @@ class InvoiceManager:
         self.__QUERY_LIST_INVOICES.bind(user = self._user)
         return self.__QUERY_LIST_INVOICES.fetch(size, start_from)
 
+    def find_invoice_by_id(self, invoice_id):
+        """ Find an invoice entity by its id """
+        invoice = InvoiceEntity.get_by_id(invoice_id)
+        if invoice is not None:
+            # If the invoice belongs to another user, set the result to None
+            if invoice.user.key() != self._user.key():
+                invoice = None
+    
+        return invoice
     
     #
     # PRIVATE METHODS

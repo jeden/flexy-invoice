@@ -13,6 +13,7 @@ from flexy.web.handler.base_handler import BaseProtectedHandler
 from flexy.utils.rendering import render_template
 from flexy.web.handler.command_base import CommandBase
 from flexy.web.handler.async_handler import AsyncHandler
+from logic.language_manager import LanguageManager
 
 class InvoiceForm(forms.Form):
     """
@@ -20,6 +21,7 @@ class InvoiceForm(forms.Form):
     """
     client = forms.TypedChoiceField(label = 'Client', coerce = int, empty_value = None) 
     currency = forms.TypedChoiceField(label = 'Currency', coerce = int, empty_value = None)
+    language = forms.TypedChoiceField(label = 'Language', coerce = int, empty_value = None)
     invoice_no = forms.CharField(label="Invoice #")
     invoice_date = forms.DateField(label = "Invoice Date", input_formats = ['%Y-%m-%d'])
     sale_date = forms.DateField(label = "Sale Date", input_formats = ['%Y-%m-%d'])
@@ -27,17 +29,21 @@ class InvoiceForm(forms.Form):
 
     client.widget = Select()
     currency.widget = Select()
+    language.widget = Select()
     invoice_no.widget = TextInput(placeholder = 'Invoice number')
     invoice_date.widget = DateInput(placeholder = 'Invoice date')
     sale_date.widget = DateInput(placeholder = 'Sale date')
 
-    def __init__(self, clients, currencies, invoice_items = 1, *args, **kwargs):
+    def __init__(self, clients, currencies, languages, invoice_items = 1, *args, **kwargs):
         super(InvoiceForm, self).__init__(*args, **kwargs)
         
         self.fields['client'].choices = clients
         
-        #Initialize the currencies drop down
+        # Initialize the currencies drop down
         self.fields['currency'].choices = currencies
+        
+        # Initialize the languages drop down
+        self.fields['language'].choices = languages 
         
         self.fields['items'].initial = invoice_items
         
@@ -81,8 +87,9 @@ class CreateInvoiceHandler(BaseProtectedHandler):
             
             clients = self._client_manager.listify_clients()
             currencies = CurrencyManager.listify_currencies()
+            languages = LanguageManager.listify_languages()
             
-            invoice_form = InvoiceForm(clients, currencies)
+            invoice_form = InvoiceForm(clients, currencies, languages)
         
         return render_template(self, 'invoice_create.html', {
                                                        'invoice_form': invoice_form,
@@ -93,7 +100,8 @@ class CreateInvoiceHandler(BaseProtectedHandler):
                 
         clients = self._client_manager.listify_clients()
         currencies = CurrencyManager.listify_currencies()
-        invoice_form = InvoiceForm(data = self.request.POST, clients = clients, currencies = currencies)
+        languages = LanguageManager.listify_languages()
+        invoice_form = InvoiceForm(data = self.request.POST, clients = clients, currencies = currencies, languages = languages)
         
         items = invoice_form.fields['items'].to_python(self.request.POST['invoice-items']) or 0
         max_item_index = int(self.request.POST['h-last-invoice-item-index']) or 0

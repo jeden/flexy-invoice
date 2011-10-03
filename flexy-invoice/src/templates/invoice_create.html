@@ -30,20 +30,26 @@
 		
 		<legend>Create New Invoice</legend>
 		
-		{{ invoice_form.client.label_tag}}
+		{{ invoice_form.client.label_tag }}
 		{{ invoice_form.client }}
-		
 		<br/>
-		{{ invoice_form.currency.label_tag}}
+		
+		{{ invoice_form.currency.label_tag }}
 		{{ invoice_form.currency }}
-		<br/>				
+		<br/>
+
+		{{ invoice_form.language.label_tag }}
+		{{ invoice_form.language }}
+		<br/>						
 
 		{{ invoice_form.invoice_no.label_tag}}
 		{{ invoice_form.invoice_no}}
-		<br/>				
+		<br/>
+						
 		{{ invoice_form.invoice_date.label_tag}}
 		{{ invoice_form.invoice_date}}
-		<br/>				
+		<br/>
+						
 		{{ invoice_form.sale_date.label_tag}}
 		{{ invoice_form.sale_date}}
 		<br/>				

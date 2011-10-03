@@ -6,7 +6,7 @@ Created on Apr 26, 2011
 from google.appengine.ext import db
 from model.user_models import UserEntity
 from model.client_models import ClientEntity
-from model.domain_models import CurrencyEntity
+from model.domain_models import CurrencyEntity, LanguageEntity
 from flexy.model.db_model import DbModel
 
 class InvoiceEntity(DbModel):
@@ -14,6 +14,7 @@ class InvoiceEntity(DbModel):
     user = db.ReferenceProperty(reference_class = UserEntity, required = True, collection_name = 'invoices')
     client = db.ReferenceProperty(reference_class = ClientEntity, required = True, collection_name = 'invoices')
     currency = db.ReferenceProperty(reference_class = CurrencyEntity, required = True)
+    language = db.ReferenceProperty(reference_class = LanguageEntity, required = True)
     invoice_no = db.StringProperty(required = True)
     invoice_date = db.DateProperty(required = True)
     sale_date = db.DateProperty(required = True)
@@ -23,8 +24,8 @@ class InvoiceEntity(DbModel):
     total = db.FloatProperty(default = 0.0)
     
     @classmethod
-    def create(cls, user, client, currency, invoice_no, invoice_date, sale_date):
-        return cls(user = user, client = client, currency = currency, invoice_no = invoice_no, invoice_date = invoice_date, sale_date = sale_date)
+    def create(cls, user, client, currency, language, invoice_no, invoice_date, sale_date):
+        return cls(user = user, client = client, currency = currency, language = language, invoice_no = invoice_no, invoice_date = invoice_date, sale_date = sale_date)
 
 class InvoiceItemEntity(DbModel):
     ''' Invoice item '''

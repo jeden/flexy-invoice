@@ -31,3 +31,18 @@ class LanguageManager:
         
         return list
         
+    @classmethod
+    def listify_languages(cls):
+        '''
+            Return the list of languages, formatted to be used in a listbox 
+            as a list of tuples (id, name)
+            An element representing no selection is added at top
+        '''
+        list = cls.list_languages()
+        list.insert(0, ('', ''))
+        return list
+        
+    @classmethod
+    def find_by_id(cls, language_id):
+        return LanguageEntity.get_by_id(language_id) 
+        
