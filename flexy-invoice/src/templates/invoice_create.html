@@ -20,7 +20,7 @@
 	
 </script>
 
-<form method='post' id='form-create-invoice' name='form-create-invoice'>
+<form method='post' id='form-create-invoice' name='form-create-invoice' class="form-normal">
 	{{ invoice_form.errors }}
 
 	<input type='hidden' id='h-last-invoice-item-index'  name='h-last-invoice-item-index'  value='1' />
@@ -49,7 +49,7 @@
 		<br/>				
 	</fieldset>
 
-	<input type='submit' id='btn-add-invoice-item'  onclick='addInvoiceItem()' novalidate value='Add invoice item' /> 
+	<input type='button' id='btn-add-invoice-item'  onclick='addInvoiceItem()' value='Add invoice item'  /> 
 			
 	<table id='tbl-invoice-items'>
 		<thead>

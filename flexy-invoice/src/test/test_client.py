@@ -9,6 +9,7 @@ from model.client_models import ClientEntity, ClientContactEntity
 from model.domain_models import CurrencyEntity, LanguageEntity
 from test import helpers
 from test.helpers import create_dummy_client
+from model.user_models import UserEntity
 
 
 class TestClientManager(BaseAppengineDatastoreTester):
@@ -17,6 +18,7 @@ class TestClientManager(BaseAppengineDatastoreTester):
     def setUp(self):
         super(TestClientManager, self).setUp()
         self.test_user = helpers.create_dummy_user(1)
+        self.verify_entity_instance(self.test_user, UserEntity)
         self.client_manager = ClientManager(self.test_user.user)
     
     def test_create_client(self):
@@ -51,8 +53,8 @@ class TestClientManager(BaseAppengineDatastoreTester):
         create_dummy_client(6, user2)
         create_dummy_client(7, user1)
          
-        client_manager_1 = ClientManager(user1.user)
-        client_manager_2 = ClientManager(user2.user)
+        client_manager_1 = ClientManager(user1)
+        client_manager_2 = ClientManager(user2)
          
         clients_1 = client_manager_1.list_clients()
         clients_2 = client_manager_2.list_clients()

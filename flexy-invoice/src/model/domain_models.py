@@ -15,7 +15,7 @@ class CurrencyEntity(DbModel):
     
     @classmethod
     def create(cls, name, code, symbol):
-        cls.check_for_uniqueness(CurrencyEntity, 'code', code)
+        cls.check_for_uniqueness('code', code)
         return cls(name = name, symbol = symbol, code = code)
     
 class ExchangeRateEntity(DbModel):
@@ -37,6 +37,6 @@ class LanguageEntity(DbModel):
     
     @classmethod
     def create(cls, name):
-        cls.check_for_uniqueness(LanguageEntity, 'name', name)
+        cls.check_for_uniqueness('name', name)
         return cls(name = name)
     

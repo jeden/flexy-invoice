@@ -63,7 +63,7 @@ def create_dummy_client(index, user, client_manager = None, language = None, cur
     """ Create a dummy client """
     
     if client_manager == None:
-        client_manager = ClientManager(user.user)
+        client_manager = ClientManager(user)
     
     if currency is None:
         currency = create_dummy_currency(index)

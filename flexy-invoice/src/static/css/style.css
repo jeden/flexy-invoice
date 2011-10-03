@@ -30,6 +30,10 @@ fieldset label {
 	color: #444;
 }
 
+.form-normal input, .form-normal select {
+	height: 1.8em;
+}
+
 .disabled {
 	text-color: #777;
 	background-color: #EEE;
